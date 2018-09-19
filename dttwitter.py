@@ -161,7 +161,7 @@ class BotStreamer(tweepy.StreamListener):
         # give in case when user replies to somebody        
         pattern = r".*@" + re.escape(bot_username) + r" ([\d]+[\.]{0,1}[\d]*)\s*([a-zA-Z\d]{0,3}).*"
         match = re.match(pattern,d['text'])
-        if match and d['in_reply_to_screen_name'] != "None" and user != bot_username:
+        if match and d['in_reply_to_screen_name'] != "None" and d['in_reply_to_screen_name'] != bot_username and user != bot_username:
             give(user,tweetId,match.group(1),d['in_reply_to_screen_name'],match.group(2))
         # give in case when user types giveaiq @targetUser amount
         pattern = r".*@" + re.escape(bot_username) + r" @([\w]+)\s*([\d]+[\.]{0,1}[\d]*)\s*([a-zA-Z\d]{0,3}).*"
