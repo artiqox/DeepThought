@@ -13,10 +13,11 @@ from secrets import *
 
 auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
-api = tweepy.API(auth)
+
+api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 bot_username = 'GiveAIQ'
-addvert = 'Give and receive #cryptocurrency $AIQ from @artiqox - just tweet "'+bot_username+' help" for more info. #AIQ #BTC'
+addvert = 'Give and receive #cryptocurrency $AIQ from @artiqox - just tweet "@'+bot_username+' help" for more info. #AIQ #BTC'
 
 def balance(user,tweetId,options):
     lowsymb = options.lower()
@@ -131,23 +132,23 @@ def help(user,tweetId,options):
 
     if options == "give":
 
-        api.update_status('Hi @{0}, give money replying to any tweet with "@{1} 1.5 USD" to give it\'s author $AIQ worth of 1.5 USD (use any ticker like EUR, GBP, BTC, ... if no matching currency amount will be in AIQ). You can also tweet "@{1} @user 1.5" to give @user 1.5 AIQ.'.format(user,bot_username), tweetId)
+        api.update_status('Hi @{0}, give money replying to any tweet with "@{1} 1.5 USD" to give it\'s author $AIQ worth of 1.5 USD (use any ticker like EUR, GBP, BTC, ... if no matching currency amount will be in #AIQ). You can also tweet "@{1} @user 1.5" to give @user 1.5 AIQ.'.format(user,bot_username), tweetId)
 
     elif options == "deposit":
         
-        api.update_status('Hi @{0}, Tweet "@{1} deposit" to see your deposit address, "@{1} deposit qr" shows the address and QR code.'.format(user,bot_username), tweetId)
+        api.update_status('Hi @{0}, Tweet "@{1} deposit" to see your deposit address for #AIQ, "@{1} deposit qr" shows the address and QR code.'.format(user,bot_username), tweetId)
 
     elif options == "balance":
         
-        api.update_status('Hi @{0}, Tweet "@{1} balance" to see your current balance, "@{1} balance EUR" shows your balance in EUR.'.format(user,bot_username), tweetId)
+        api.update_status('Hi @{0}, Tweet "@{1} balance" to see your current balance of #AIQ, "@{1} balance EUR" shows your balance in EUR.'.format(user,bot_username), tweetId)
 
     elif options == "withdraw":
         
-        api.update_status('Hi @{0}, Tweet "@{1} withdraw xyz 20" to withdraw 20 AIQ to wallet address xyz.'.format(user,bot_username), tweetId)
+        api.update_status('Hi @{0}, Tweet "@{1} withdraw xyz 20" to withdraw 20 #AIQ to wallet address xyz.'.format(user,bot_username), tweetId)
 
     else:
 
-        api.update_status('Hi @{0}, give money by simply replying to any tweet with "@{1} 1.5 USD" to give it\'s author $AIQ worth of 1.5 USD. Check other commands by tweeting "@{1} help give", "@{1} help balance", "@{1} help deposit" or "@{1} help withdraw"'.format(user,bot_username), tweetId)
+        api.update_status('Hi @{0}, give money by replying to any tweet with "@{1} 1.5 USD" to give it\'s author $AIQ worth of 1.5 USD. Check other #AIQ bot commands by tweeting "@{1} help give", "@{1} help balance", "@{1} help deposit" or "@{1} help withdraw"'.format(user,bot_username), tweetId)
 
 # create a class inheriting from the tweepy  StreamListener
 class BotStreamer(tweepy.StreamListener):
@@ -160,12 +161,12 @@ class BotStreamer(tweepy.StreamListener):
         # give in case when user replies to somebody        
         pattern = r".*@" + re.escape(bot_username) + r" ([\d]+[\.]{0,1}[\d]*)\s*([a-zA-Z\d]{0,3}).*"
         match = re.match(pattern,d['text'])
-        if d['in_reply_to_screen_name'] != "None" and user != bot_username and user != "Znafca1" and match:
+        if match and d['in_reply_to_screen_name'] != "None" and user != bot_username:
             give(user,tweetId,match.group(1),d['in_reply_to_screen_name'],match.group(2))
         # give in case when user types giveaiq @targetUser amount
         pattern = r".*@" + re.escape(bot_username) + r" @([\w]+)\s*([\d]+[\.]{0,1}[\d]*)\s*([a-zA-Z\d]{0,3}).*"
         match = re.match(pattern,d['text'])
-        if match and user != bot_username:
+        if match and user != bot_username and match.group(1) != bot_username:
             give(user,tweetId,match.group(2),match.group(1),match.group(3))
         # withdraw of funds
         pattern = r".*@" + re.escape(bot_username) + r" withdraw \b([a-z\dA-Z]{34})\b (\d+[\.]*[\d]*)\s*"
@@ -193,3 +194,4 @@ myStreamListener = BotStreamer()
 stream = tweepy.Stream(auth, myStreamListener)
 track_me='@'+bot_username
 stream.filter(track=[track_me])
+
