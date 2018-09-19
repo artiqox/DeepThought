@@ -26,7 +26,7 @@
 * Setup a bot with the user @BotFather through PM on Telegram, after going through a setup you will be given a bot token. Edit the command.py file and on line 13 replace the 'xxxxxxxx' with the bot token you just recieved from @BotFather. 
 
 *  Run the script 
-`python3 telegram.py`
+`python3 dttelegram.py`
 
 #### Examples of Commands
 *  Initiate the bot by inviting it to a chat or via PM, some commands are `/balance` , `/price` , `/help` and to find out the format related to tip others and withdrawal of funds use `/commands`.
@@ -40,7 +40,7 @@
 `access_token = 'xxx' access_secret = 'xxx'`
 
 *  Run the script 
-`python3 twitter.py`
+`python3 dttwitter.py`
 
 #### Examples of Commands
 * tweet with "bot_username @receivingUsername 20" will give @receivingUsername 20 AIQ
